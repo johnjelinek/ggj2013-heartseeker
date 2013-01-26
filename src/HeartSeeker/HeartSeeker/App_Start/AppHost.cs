@@ -25,17 +25,12 @@ namespace HeartSeeker.App_Start
 		: AppHostBase
 	{		
 		public AppHost() //Tell ServiceStack the name and where to find your web services
-			: base("StarterTemplate ASP.NET Host", typeof(HelloService).Assembly) { }
+			: base("Global Game Jam 2013 ASP.NET Host", typeof(PlayersService).Assembly) { }
 
 		public override void Configure(Funq.Container container)
 		{
 			//Set JSON web services to return idiomatic JSON camelCase properties
 			ServiceStack.Text.JsConfig.EmitCamelCaseNames = true;
-		
-			//Configure User Defined REST Paths
-			Routes
-			  .Add<Hello>("/hello")
-			  .Add<Hello>("/hello/{Name*}");
 
 			//Uncomment to change the default ServiceStack configuration
 			//SetConfig(new EndpointHostConfig {
@@ -45,7 +40,7 @@ namespace HeartSeeker.App_Start
 			//ConfigureAuth(container);
 
 			//Register all your dependencies
-			container.Register(new TodoRepository());			
+            container.Register(new PlayerRepository());
 		}
 
 		/* Uncomment to enable ServiceStack Authentication and CustomUserSession

@@ -84,10 +84,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\js\ss-validation.js" />
-    <Content Include="default.htm" />
-    <Content Include="jqunback-1.51.min.js" />
-    <Content Include="README.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -101,7 +97,7 @@
     <Compile Include="App_Start\PageBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_Start\WebServiceExamples.cs" />
+    <Compile Include="App_Start\WebServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
