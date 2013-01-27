@@ -77,9 +77,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\HeartSeeker\HeartSeeker\HeartSeeker.csproj">
+    <ProjectReference Include="..\..\..\src\HeartSeeker\HeartSeeker.WebAPI\HeartSeeker.WebAPI.csproj">
       <Project>{0F0B7D76-9A97-48E6-A524-78A31990C68B}</Project>
-      <Name>HeartSeeker</Name>
+      <Name>HeartSeeker.WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
