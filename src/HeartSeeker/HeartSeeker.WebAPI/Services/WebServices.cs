@@ -37,10 +37,16 @@ namespace HeartSeeker.Services
     public class ResetPlayers { }
 
     [Route("/heartbeat/{Latitude}/{Longitude}")]
-    public class GetHeartBeat
+    public class GetHeartBeat : IReturn<HeartBeatResponse>
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+    }
+
+    public class HeartBeatResponse
+    {
+        public int HeartBeatDistance { get; set; }
+        public double HeartBeatDistanceInMeters { get; set; }
     }
 
     public class PlayersService : Service
@@ -135,37 +141,40 @@ namespace HeartSeeker.Services
 
             // return number between 0 (lowest) - 5 (furthest)
             var haversine = new Haversine();
-            var distance = haversine.Distance(new Position(request.Latitude, request.Longitude), Heart, DistanceType.Kilometers);
+            var heartbeatDistance = new HeartBeatResponse();
+            heartbeatDistance.HeartBeatDistanceInMeters = haversine.Distance(new Position(request.Latitude, request.Longitude), Heart, DistanceType.Kilometers) * 1000;
 
-            if (distance >= 0.2)
+            if (heartbeatDistance.HeartBeatDistanceInMeters >= 200)
             {
-                return 5;
+                heartbeatDistance.HeartBeatDistance = 5;
             }
-            else if (distance > 0.15)
+            else if (heartbeatDistance.HeartBeatDistanceInMeters > 150)
             {
-                return 4;
+                heartbeatDistance.HeartBeatDistance = 4;
             }
-            else if (distance > 0.1)
+            else if (heartbeatDistance.HeartBeatDistanceInMeters > 100)
             {
-                return 3;
+                heartbeatDistance.HeartBeatDistance = 3;
             }
-            else if (distance > 0.07)
+            else if (heartbeatDistance.HeartBeatDistanceInMeters > 70)
             {
-                return 2;
+                heartbeatDistance.HeartBeatDistance = 2;
             }
-            else if (distance > 0.03)
+            else if (heartbeatDistance.HeartBeatDistanceInMeters > 30)
             {
-                return 1;
+                heartbeatDistance.HeartBeatDistance = 1;
             }
-            else if (distance <= 0.03)
+            else if (heartbeatDistance.HeartBeatDistanceInMeters <= 30)
             {
-                return 0;
+                heartbeatDistance.HeartBeatDistance = 0;
             }
             else
             {
                 // falls through
-                return 5;
+                heartbeatDistance.HeartBeatDistance = 5;
             }
+
+            return heartbeatDistance;
         }
     }
 
