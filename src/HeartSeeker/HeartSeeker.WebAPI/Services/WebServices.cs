@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
+using HaversineFormula;
 
 namespace HeartSeeker.Services
 {
@@ -13,11 +14,11 @@ namespace HeartSeeker.Services
     public class Player
     {
         public long Id { get; set; }
-        public GeoCoordinates GeoCoordinates { get; set; }
+        public Position Position { get; set; }
 
-        public Player()
+        public Player(Position position)
         {
-            GeoCoordinates = new GeoCoordinates();
+            Position = position;
         }
     }
 
@@ -28,13 +29,6 @@ namespace HeartSeeker.Services
     /// <summary>ResetPlayers DTO</summary>
     [Route("/players/reset")]
     public class ResetPlayers { }
-
-    /// <summary>GeoCoordinates</summary>
-    public class GeoCoordinates
-    {
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
-    }
 
     public class PlayersService : Service
     {
@@ -58,16 +52,7 @@ namespace HeartSeeker.Services
                 throw new ArgumentException("Player Id Does Not Exist");
             }
 
-            return GetPlayersNearCoordinates(player.GeoCoordinates);
-        }
-
-        private List<Player> GetPlayersNearCoordinates(GeoCoordinates geoCoordinates)
-        {
-            // TODO: Add logic to Get Players
-            return new List<Player>()
-            {
-                new Player { Id = 1 }
-            };
+            return player.Position.GetNearbyPlayers(Repository);
         }
 
         public object Post(Player request)
@@ -109,7 +94,7 @@ namespace HeartSeeker.Services
             else
             {
                 // update
-                existing.GeoCoordinates = player.GeoCoordinates;
+                existing.Position = player.Position;
             }
 
             return player;
@@ -118,6 +103,17 @@ namespace HeartSeeker.Services
         public void DeleteByIds(params long[] ids)
         {
             players.RemoveAll(x => ids.Contains(x.Id));
+        }
+    }
+
+    public static class PositionExtensions
+    {
+        public static List<Player> GetNearbyPlayers(this Position position, PlayerRepository players)
+        {
+            const double MAXDISTANCE = 0.2; // 200 Meters
+            var haversine = new Haversine();
+            var nearby = players.GetAll().Where(x => haversine.Distance(position, x.Position, DistanceType.Kilometers) < MAXDISTANCE);
+            return nearby.ToList();
         }
     }
 }

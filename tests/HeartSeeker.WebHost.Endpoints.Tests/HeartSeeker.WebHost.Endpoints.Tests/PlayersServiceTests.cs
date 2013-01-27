@@ -7,6 +7,7 @@ using ServiceStack.WebHost.Endpoints;
 using HeartSeeker.Services;
 using Funq;
 using ServiceStack.ServiceClient.Web;
+using HaversineFormula;
 
 namespace HeartSeeker.WebHost.Endpoints.Tests
 {
@@ -46,18 +47,23 @@ namespace HeartSeeker.WebHost.Endpoints.Tests
         public void Run()
         {
             var restClient = new JsonServiceClient(BaseUri);
-            var player = restClient.Post<Player>(String.Format("{0}/players", BaseUri), new Player { GeoCoordinates = { Latitude = 123, Longitude = 234 } });
+            var player = restClient.Post<Player>(String.Format("{0}/players", BaseUri), new Player(new Position(33.051281, -96.676662)));
             Assert.That(player.Id, Is.EqualTo(1));
-            Assert.That(player.GeoCoordinates.Latitude, Is.EqualTo(123));
-            Assert.That(player.GeoCoordinates.Longitude, Is.EqualTo(234));
+            Assert.That(player.Position.Latitude, Is.EqualTo(33.051281));
+            Assert.That(player.Position.Longitude, Is.EqualTo(-96.676662));
 
-            player.GeoCoordinates = new GeoCoordinates() { Latitude = 234, Longitude = 345 };
+            player.Position = new Position(33.051524, -96.677306);
             player = restClient.Put<Player>(String.Format("{0}/players/{1}", BaseUri, player.Id), player);
-            Assert.That(player.GeoCoordinates.Latitude, Is.EqualTo(234));
-            Assert.That(player.GeoCoordinates.Longitude, Is.EqualTo(345));
+            Assert.That(player.Position.Latitude, Is.EqualTo(33.051524));
+            Assert.That(player.Position.Longitude, Is.EqualTo(-96.677306));
+
+            var newPlayer = restClient.Post<Player>(String.Format("{0}/players", BaseUri), new Player(new Position(33.051281, -96.676662)));
+            Assert.That(newPlayer.Id, Is.EqualTo(2));
+            Assert.That(newPlayer.Position.Latitude, Is.EqualTo(33.051281));
+            Assert.That(newPlayer.Position.Longitude, Is.EqualTo(-96.676662));
 
             var nearby = restClient.Get<List<Player>>(String.Format("{0}/players/{1}/nearby", BaseUri, player.Id));
-            Assert.IsNotNull(nearby);
+            Assert.That(nearby.Count, Is.EqualTo(2));
 
             var reset = restClient.Get<ResetPlayers>(String.Format("{0}/players/reset", BaseUri));
             Assert.NotNull(reset);
