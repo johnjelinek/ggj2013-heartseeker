@@ -97,7 +97,7 @@
     <Compile Include="App_Start\PageBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_Start\WebServices.cs" />
+    <Compile Include="Services\WebServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

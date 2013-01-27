@@ -8,6 +8,7 @@ using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceInterface.ServiceModel;
 using ServiceStack.WebHost.Endpoints;
+using HeartSeeker.Services;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(HeartSeeker.App_Start.AppHost), "Start")]
 

@@ -5,7 +5,7 @@ using System.Web;
 using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
 
-namespace HeartSeeker
+namespace HeartSeeker.Services
 {
     /// <summary>Player DTO</summary>
     [Route("/players", "POST")]
@@ -14,6 +14,11 @@ namespace HeartSeeker
     {
         public long Id { get; set; }
         public GeoCoordinates GeoCoordinates { get; set; }
+
+        public Player()
+        {
+            GeoCoordinates = new GeoCoordinates();
+        }
     }
 
     /// <summary>PlayersNearMe DTO</summary>

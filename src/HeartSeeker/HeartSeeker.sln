@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DE70EB
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartSeeker.WebHost.Endpoints.Tests", "..\..\tests\HeartSeeker.WebHost.Endpoints.Tests\HeartSeeker.WebHost.Endpoints.Tests\HeartSeeker.WebHost.Endpoints.Tests.csproj", "{7FAA7849-4111-47EA-9B8F-F393B16CD9BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{0F0B7D76-9A97-48E6-A524-78A31990C68B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F0B7D76-9A97-48E6-A524-78A31990C68B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F0B7D76-9A97-48E6-A524-78A31990C68B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FAA7849-4111-47EA-9B8F-F393B16CD9BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FAA7849-4111-47EA-9B8F-F393B16CD9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FAA7849-4111-47EA-9B8F-F393B16CD9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FAA7849-4111-47EA-9B8F-F393B16CD9BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
