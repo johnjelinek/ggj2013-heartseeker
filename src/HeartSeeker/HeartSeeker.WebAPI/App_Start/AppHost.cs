@@ -9,6 +9,7 @@ using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceInterface.ServiceModel;
 using ServiceStack.WebHost.Endpoints;
 using HeartSeeker.Services;
+using HaversineFormula;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(HeartSeeker.App_Start.AppHost), "Start")]
 
@@ -22,61 +23,61 @@ using HeartSeeker.Services;
 
 namespace HeartSeeker.App_Start
 {
-	public class AppHost
-		: AppHostBase
-	{		
-		public AppHost() //Tell ServiceStack the name and where to find your web services
-			: base("Global Game Jam 2013 ASP.NET Host", typeof(PlayersService).Assembly) { }
+    public class AppHost
+        : AppHostBase
+    {
+        public AppHost() //Tell ServiceStack the name and where to find your web services
+            : base("Global Game Jam 2013 ASP.NET Host", typeof(PlayersService).Assembly) { }
 
-		public override void Configure(Funq.Container container)
-		{
-			//Set JSON web services to return idiomatic JSON camelCase properties
-			ServiceStack.Text.JsConfig.EmitCamelCaseNames = true;
+        public override void Configure(Funq.Container container)
+        {
+            //Set JSON web services to return idiomatic JSON camelCase properties
+            ServiceStack.Text.JsConfig.EmitCamelCaseNames = true;
 
-			//Uncomment to change the default ServiceStack configuration
-			//SetConfig(new EndpointHostConfig {
-			//});
+            //Uncomment to change the default ServiceStack configuration
+            //SetConfig(new EndpointHostConfig {
+            //});
 
-			//Enable Authentication
-			//ConfigureAuth(container);
+            //Enable Authentication
+            //ConfigureAuth(container);
 
-			//Register all your dependencies
-            container.Register(new PlayerRepository());
-		}
+            //Register all your dependencies
+            container.Register(new PlayersService(new Position(33.054123, -96.679988), new PlayerRepository()));
+        }
 
-		/* Uncomment to enable ServiceStack Authentication and CustomUserSession
-		private void ConfigureAuth(Funq.Container container)
-		{
-			var appSettings = new AppSettings();
+        /* Uncomment to enable ServiceStack Authentication and CustomUserSession
+        private void ConfigureAuth(Funq.Container container)
+        {
+            var appSettings = new AppSettings();
 
-			//Default route: /auth/{provider}
-			Plugins.Add(new AuthFeature(this, () => new CustomUserSession(),
-				new IAuthProvider[] {
-					new CredentialsAuthProvider(appSettings), 
-					new FacebookAuthProvider(appSettings), 
-					new TwitterAuthProvider(appSettings), 
-					new BasicAuthProvider(appSettings), 
-				})); 
+            //Default route: /auth/{provider}
+            Plugins.Add(new AuthFeature(this, () => new CustomUserSession(),
+                new IAuthProvider[] {
+                    new CredentialsAuthProvider(appSettings), 
+                    new FacebookAuthProvider(appSettings), 
+                    new TwitterAuthProvider(appSettings), 
+                    new BasicAuthProvider(appSettings), 
+                })); 
 
-			//Default route: /register
-			Plugins.Add(new RegistrationFeature()); 
+            //Default route: /register
+            Plugins.Add(new RegistrationFeature()); 
 
-			//Requires ConnectionString configured in Web.Config
-			var connectionString = ConfigurationManager.ConnectionStrings["AppDb"].ConnectionString;
-			container.Register<IDbConnectionFactory>(c =>
-				new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
+            //Requires ConnectionString configured in Web.Config
+            var connectionString = ConfigurationManager.ConnectionStrings["AppDb"].ConnectionString;
+            container.Register<IDbConnectionFactory>(c =>
+                new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
 
-			container.Register<IUserAuthRepository>(c =>
-				new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>()));
+            container.Register<IUserAuthRepository>(c =>
+                new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>()));
 
-			var authRepo = (OrmLiteAuthRepository)container.Resolve<IUserAuthRepository>();
-			authRepo.CreateMissingTables();
-		}
-		*/
+            var authRepo = (OrmLiteAuthRepository)container.Resolve<IUserAuthRepository>();
+            authRepo.CreateMissingTables();
+        }
+        */
 
-		public static void Start()
-		{
-			new AppHost().Init();
-		}
-	}
+        public static void Start()
+        {
+            new AppHost().Init();
+        }
+    }
 }

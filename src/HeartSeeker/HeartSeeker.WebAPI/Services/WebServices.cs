@@ -24,51 +24,78 @@ namespace HeartSeeker.Services
 
     /// <summary>PlayersNearMe DTO</summary>
     [Route("/players/{Id}/nearby", "GET")]
-    public class PlayersNearMe : IReturn<List<Player>> { public long[] Id { get; set; } }
+    [Route("/players/nearby/{Latitude}/{Longitude}", "GET")]
+    public class PlayersNearby : IReturn<List<Player>>
+    {
+        public long[] Id { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
 
     /// <summary>ResetPlayers DTO</summary>
     [Route("/players/reset")]
     public class ResetPlayers { }
 
-    [Route("/players/nearby", "GET")]
-    public class PlayersNearby : IReturn<List<Player>> { public Position Position { get; set; } }
-
     public class PlayersService : Service
     {
         public PlayerRepository Repository { get; set; } // Injected by IOC
+        public Position Heart { get; set; }
+
+        public PlayersService(Position heart, PlayerRepository repository)
+        {
+            if (heart == null)
+            {
+                throw new ArgumentException("Heart", "Heart Position is Missing");
+            }
+
+            if (repository == null)
+            {
+                throw new ArgumentException("Repository", "Player Repository is Missing");
+            }
+
+            Heart = heart;
+            Repository = repository;
+        }
 
         /// <summary>Reset the PlayerRepository</summary>
         public object Any(ResetPlayers request)
         {
             var players = Repository.GetAll();
             Repository.DeleteByIds(players.Select(x => x.Id).ToArray());
+            var random = new Random();
+            // min + randomizer * (max - min) for lat and long
+            Heart = new Position(33.048044 + random.NextDouble() * (33.055526 - 33.048044), -96.681275 + random.NextDouble() * (-96.672156 - -96.681275));
             return new { Result = "Game Reset" };
         }
 
-        /// <summary>Get Players near coordinates</summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public object Any(PlayersNearby request)
+        /// <summary>Get Players Near Coordinates</summary>
+        /// <returns>List of Players Near the Coordinates provided</returns>
+        public object Get(PlayersNearby request)
         {
-            if (request.Position == null)
+            if (request.Id != null)
             {
-                throw new ArgumentException("Position", "Position is not acceptable");
+                var player = Repository.GetByIds(request.Id).FirstOrDefault();
+                if (player == null)
+                {
+                    throw new ArgumentException("Player Id", "Player Id Does Not Exist");
+                }
+                return player.Position.GetNearbyPlayers(Repository);
             }
-
-            return request.Position.GetNearbyPlayers(Repository);
-        }
-
-        /// <summary>Get Players Near Me</summary>
-        /// <returns>List of Players Near the Player Requested</returns>
-        public object Get(PlayersNearMe request)
-        {
-            var player = Repository.GetByIds(request.Id).FirstOrDefault();
-            if (player == null)
+            else
             {
-                throw new ArgumentException("Player Id Does Not Exist");
-            }
+                // check for coordinates
+                if (request.Latitude == null)
+                {
+                    throw new ArgumentException("Latitude", "Latitude is not acceptable");
+                }
+                if (request.Longitude == null)
+                {
+                    throw new ArgumentException("Longitude", "Longitude is not acceptable");
+                }
 
-            return player.Position.GetNearbyPlayers(Repository);
+                var position = new Position(request.Latitude, request.Longitude);
+                return position.GetNearbyPlayers(Repository);
+            }
         }
 
         public object Post(Player request)
