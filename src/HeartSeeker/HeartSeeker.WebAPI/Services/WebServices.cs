@@ -41,6 +41,11 @@ namespace HeartSeeker.Services
         public PlayerRepository Repository { get; set; } // Injected by IOC
         public Position Heart { get; set; }
 
+        public PlayersService()
+        {
+
+        }
+
         public PlayersService(Position heart, PlayerRepository repository)
         {
             if (heart == null)
