@@ -30,6 +30,9 @@ namespace HeartSeeker.Services
     [Route("/players/reset")]
     public class ResetPlayers { }
 
+    [Route("/players/nearby", "GET")]
+    public class PlayersNearby : IReturn<List<Player>> { public Position Position { get; set; } }
+
     public class PlayersService : Service
     {
         public PlayerRepository Repository { get; set; } // Injected by IOC
@@ -40,6 +43,19 @@ namespace HeartSeeker.Services
             var players = Repository.GetAll();
             Repository.DeleteByIds(players.Select(x => x.Id).ToArray());
             return new { Result = "Game Reset" };
+        }
+
+        /// <summary>Get Players near coordinates</summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public object Any(PlayersNearby request)
+        {
+            if (request.Position == null)
+            {
+                throw new ArgumentException("Position", "Position is not acceptable");
+            }
+
+            return request.Position.GetNearbyPlayers(Repository);
         }
 
         /// <summary>Get Players Near Me</summary>
