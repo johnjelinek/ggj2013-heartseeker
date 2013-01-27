@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartSeeker.WebHost.Endpoin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartSeeker.WebAPI", "HeartSeeker.WebAPI\HeartSeeker.WebAPI.csproj", "{0F0B7D76-9A97-48E6-A524-78A31990C68B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartSeeker.Client.WP7", "Heartseeker.Client.WP7\HeartSeeker.Client.WP7.csproj", "{4B4CA826-9590-427D-9FD1-79E0B9D64F3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartSeeker.Client.WP7", "HeartSeeker.Client.WP7\HeartSeeker.Client.WP7.csproj", "{4B4CA826-9590-427D-9FD1-79E0B9D64F3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartSeekerAudioPlaybackAgent", "HeartSeekerAudioPlaybackAgent\HeartSeekerAudioPlaybackAgent.csproj", "{36F0CB90-FD53-48ED-B747-0F620211D09F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4B4CA826-9590-427D-9FD1-79E0B9D64F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B4CA826-9590-427D-9FD1-79E0B9D64F3F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4B4CA826-9590-427D-9FD1-79E0B9D64F3F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{36F0CB90-FD53-48ED-B747-0F620211D09F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F0CB90-FD53-48ED-B747-0F620211D09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F0CB90-FD53-48ED-B747-0F620211D09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F0CB90-FD53-48ED-B747-0F620211D09F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,6 +18,9 @@ using System.Windows.Media.Imaging;
 using Microsoft.Phone.BackgroundAudio;
 using System.IO;
 using System.Windows.Navigation;
+using System.Windows.Resources;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework;
 
 namespace Heartseeker
 {
@@ -28,8 +31,8 @@ namespace Heartseeker
         private double zoomLevel = 17.00;
         private MapLayer heartSeekerMapLayer;
         private LocationService locationService;
+        private SoundService soundService;
         private double distanceToHeart;
-        private AudioTrack audioTrack = new AudioTrack(new Uri("sounds/Heartbeat_Speed1.wav", UriKind.Relative), "", "", "", null);
 
         // Constructor
         public MainPage()
@@ -37,6 +40,9 @@ namespace Heartseeker
             InitializeComponent();
             
             locationService = new LocationService();
+            soundService = new SoundService();
+
+            soundService.CopySoundBitesToIsolatedStorage();
             heartLocation = locationService.GetHeartLocation();
 
             locationManager = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
@@ -55,18 +61,45 @@ namespace Heartseeker
             SetupTimer();
         }
 
+        string currentAudioTrack = "";
+
         private void PlaySound(string soundBite)
         {
+            //if (soundBite.Equals(currentAudioTrack))
+            //    return;
+
+            currentAudioTrack = soundBite;
+            // Play_wavFile(soundBite);
+            BackgroundAudioPlayer player = BackgroundAudioPlayer.Instance;
             if (PlayState.Playing == BackgroundAudioPlayer.Instance.PlayerState)
             {
-                BackgroundAudioPlayer.Instance.Pause();
+                player.Pause();
             }
-            else
-            {
-                BackgroundAudioPlayer.Instance.Play();
-            }
-
+            player.Track = soundService.GetAudioTrack(soundBite);
+            player.Stop();
+            player.Play();
+            player.PlayStateChanged += new EventHandler(player_PlayStateChanged);
         }
+
+        void player_PlayStateChanged(object sender, EventArgs e)
+        {
+            //BackgroundAudioPlayer player = BackgroundAudioPlayer.Instance;
+            //if (player.PlayerState == PlayState.Stopped)
+            //{
+            //    player.Play();
+            //}
+        }
+
+        void Play_wavFile(string soundBite) 
+        { 
+            StreamResourceInfo _stream = 
+                Application.GetResourceStream(new Uri("sounds/" + soundBite, UriKind.Relative)); 
+            SoundEffect _soundeffect = SoundEffect.FromStream(_stream.Stream); 
+            SoundEffectInstance soundInstance = _soundeffect.CreateInstance(); 
+            FrameworkDispatcher.Update(); 
+            soundInstance.Play(); 
+        }
+
 
         // Called when players current position has changed
         void locationManager_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> newLocation)
@@ -149,6 +182,31 @@ namespace Heartseeker
                 if (!double.IsNaN(distanceToHeart))
                     this.DistanceToHeart.Text = "You are " + distanceToHeart.ToString("0.00") + " meters away!";
             }
+
+            if (distanceToHeart > 400) 
+            {
+                PlaySound("Heartbeat_Speed1.wav");
+            }
+            else if (distanceToHeart > 300)
+            {
+                PlaySound("Heartbeat_Speed2.wav");
+            }
+            else if (distanceToHeart > 200) 
+            {
+                PlaySound("Heartbeat_Speed3.wav");
+            }
+            else if (distanceToHeart > 100) 
+            {
+                PlaySound("Heartbeat_Speed4.wav");
+            }
+            else if (distanceToHeart > 30)
+            {
+                PlaySound("Heartbeat_Speed5.wav");
+            }
+            else
+            {
+                PlaySound("Heartbeat_Speed5.wav");
+            }
         }
 
         private void ApplicationBarClearPins_Click(object sender, EventArgs e)
@@ -170,7 +228,10 @@ namespace Heartseeker
             heartSeekerMapLayer.UpdateLayout();
 
         }
-    
-    
+
+        private void ApplicationBarPlaySound_Click(object sender, EventArgs e)
+        {
+            PlaySound("Heartbeat_Speed5.wav");
+        }
     }
 }

@@ -43,7 +43,7 @@
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/share.png" Text="Clear Pins" Click="ApplicationBarClearPins_Click"/>
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.edit.rest.png" Text="Find Me" Click="ApplicationBarFindMe_Click"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.feature.camera.rest.png" Text="Photos/Vidéos"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.feature.camera.rest.png" Text="Photos/Vidéos" Click="ApplicationBarPlaySound_Click"/>
             <shell:ApplicationBarIconButton IconUri="/Images/calendar.png" Text="Rendez-vous"/>
 
             <shell:ApplicationBar.MenuItems>
