@@ -36,6 +36,13 @@ namespace HeartSeeker.Services
     [Route("/players/reset")]
     public class ResetPlayers { }
 
+    [Route("/heartbeat/{Latitude}/{Longitude}")]
+    public class GetHeartBeat
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
+
     public class PlayersService : Service
     {
         public PlayerRepository Repository { get; set; } // Injected by IOC
@@ -89,11 +96,11 @@ namespace HeartSeeker.Services
             else
             {
                 // check for coordinates
-                if (request.Latitude == null)
+                if (request.Latitude == 0.0)
                 {
                     throw new ArgumentException("Latitude", "Latitude is not acceptable");
                 }
-                if (request.Longitude == null)
+                if (request.Longitude == 0.0)
                 {
                     throw new ArgumentException("Longitude", "Longitude is not acceptable");
                 }
@@ -111,6 +118,54 @@ namespace HeartSeeker.Services
         public object Put(Player request)
         {
             return Repository.Store(request);
+        }
+
+        /// <summary>Get the HeartBeat</summary>
+        public object Any(GetHeartBeat request)
+        {
+            // check for coordinates
+            if (request.Latitude == 0.0)
+            {
+                throw new ArgumentException("Latitude", "Latitude is not acceptable");
+            }
+            if (request.Longitude == 0.0)
+            {
+                throw new ArgumentException("Longitude", "Longitude is not acceptable");
+            }
+
+            // return number between 0 (lowest) - 5 (furthest)
+            var haversine = new Haversine();
+            var distance = haversine.Distance(new Position(request.Latitude, request.Longitude), Heart, DistanceType.Kilometers);
+
+            if (distance >= 0.2)
+            {
+                return 5;
+            }
+            else if (distance > 0.15)
+            {
+                return 4;
+            }
+            else if (distance > 0.1)
+            {
+                return 3;
+            }
+            else if (distance > 0.07)
+            {
+                return 2;
+            }
+            else if (distance > 0.03)
+            {
+                return 1;
+            }
+            else if (distance <= 0.03)
+            {
+                return 0;
+            }
+            else
+            {
+                // falls through
+                return 5;
+            }
         }
     }
 

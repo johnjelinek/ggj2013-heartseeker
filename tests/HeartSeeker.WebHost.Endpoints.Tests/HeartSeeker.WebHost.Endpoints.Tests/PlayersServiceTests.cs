@@ -68,6 +68,9 @@ namespace HeartSeeker.WebHost.Endpoints.Tests
             nearby = restClient.Get<List<Player>>(String.Format("{0}/players/nearby/{1}/{2}", BaseUri, 33.050130, -96.676641));
             Assert.That(nearby.Count, Is.EqualTo(2));
 
+            var heartbeat = restClient.Get<int>(String.Format("{0}/heartbeat/{1}/{2}", BaseUri, player.Position.Latitude, player.Position.Longitude));
+            Assert.NotNull(heartbeat);
+
             var reset = restClient.Get<ResetPlayers>(String.Format("{0}/players/reset", BaseUri));
             Assert.NotNull(reset);
 
