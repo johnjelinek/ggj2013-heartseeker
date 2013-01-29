@@ -19,10 +19,16 @@ namespace Heartseeker.Services
 
         public GeoCoordinate GetHeartLocation()
         {
+
+            //IFeedParser resultsParser = new FeedParser();
+            //HeartSeekerWebServices ws = new HeartSeekerWebServices(resultsParser);
+            //ws.Fetch(new Uri(@"http://ggj2013-webapi.apphb.com/metadata"));
+
             GeoCoordinate heart = new GeoCoordinate();
             heart.Latitude = 33.0511;
             heart.Longitude = -96.6752;
             return heart;
+
         }
 
         public double GetDistanceFromHeart(GeoCoordinate myLocation, GeoCoordinate heartLocation)
@@ -48,6 +54,19 @@ namespace Heartseeker.Services
 
             double distance = Math.Sqrt(longDiff * longDiff + latDiff * latDiff);
             return distance;
+
+        }
+
+
+        public void ReportMyLocation(GeoCoordinate myLocation)
+        {
+            IFeedParser resultsParser = new FeedParser();
+            HeartSeekerWebServices ws = new HeartSeekerWebServices(resultsParser);
+
+            string url = @"http://ggj2013-webapi.apphb.com/heartbeat/" +
+                         myLocation.Latitude + "/" + myLocation.Longitude;
+
+            ws.Fetch(new Uri(url));
 
         }
     }

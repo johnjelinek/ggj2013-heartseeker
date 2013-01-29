@@ -70,7 +70,11 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FeedParser.cs" />
+    <Compile Include="Services\HeartSeekerWebServices.cs" />
+    <Compile Include="Services\IFeedParser.cs" />
     <Compile Include="Services\LocationService.cs" />
+    <Compile Include="Services\MyLocationReponse.cs" />
     <Compile Include="Services\SoundService.cs" />
   </ItemGroup>
   <ItemGroup>

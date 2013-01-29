@@ -112,6 +112,8 @@ namespace Heartseeker
                 GeoCoordinate myCurrentPosition = new GeoCoordinate(newLocation.Position.Location.Latitude, newLocation.Position.Location.Longitude);
                 heartSeekerMapLayer.AddChild(pushpinImage, myCurrentPosition);
                 heartSeekerMapLayer.UpdateLayout();
+                locationService.ReportMyLocation(newLocation.Position.Location);
+
             }
             catch (Exception ex)
             {
